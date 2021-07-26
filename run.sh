@@ -7,7 +7,7 @@ DCIP=$(cat conf.txt | grep dc-ip | cut -d " " -f 2)
 USERNAME=$(cat conf.txt | grep username | cut -d " " -f 2)
 USERDOMAIN=$(cat conf.txt | grep domain | cut -d " " -f 2)
 
-if [ -z "DCIP" ] || [ -z "USERNAME" ] ; then
+if [ -z "DCIP" ] || [ -z "USERNAME" ] || [ -z "USERDOMAIN" ] ; then
     echo "Something is wrong in your conf.txt file"
  fi
 

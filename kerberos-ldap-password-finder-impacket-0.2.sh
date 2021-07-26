@@ -8,7 +8,6 @@ echo -e "${GREEN}****LDAP PASSWORD ENUM****${NC}"
 #2 DC hostname ( for the SPN )
 #3 username
 #4 domain 
-echo $5
 if [ -z $KRB5CCNAME ] ; then  
 	echo "Creating a TGT ticket for the user"
 	getTGT.py -dc-ip $1 $5/$3
