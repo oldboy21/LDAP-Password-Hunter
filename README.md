@@ -8,8 +8,8 @@ a custom list of attributes is built and filtered in order to identify a big que
 
 ## Requirements
 
-* ldapsearch [Link](https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html) 
-* Impacket [Link](https://github.com/SecureAuthCorp/impacket)
+* [Ldapsearch](https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html) 
+* [Impacket](https://github.com/SecureAuthCorp/impacket)
 
 ## Usage
 
