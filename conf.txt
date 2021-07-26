@@ -1,2 +1,3 @@
-domain-controller-ip DOMAIN-IP
+dc-ip DOMAIN-IP
 username DOMAIN-ACCOUNT-USERNAME
+domain DOMAIN

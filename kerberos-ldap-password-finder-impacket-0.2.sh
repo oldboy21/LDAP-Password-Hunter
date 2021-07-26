@@ -8,10 +8,10 @@ echo -e "${GREEN}****LDAP PASSWORD ENUM****${NC}"
 #2 DC hostname ( for the SPN )
 #3 username
 #4 domain 
-
+echo $5
 if [ -z $KRB5CCNAME ] ; then  
 	echo "Creating a TGT ticket for the user"
-	getTGT.py -dc-ip $1 placeholder/$3
+	getTGT.py -dc-ip $1 $5/$3
 	mv $3.ccache $3TGT.ccache
 	export KRB5CCNAME="$(pwd)"/$3TGT.ccache
 	echo $KRB5CCNAME
@@ -20,11 +20,11 @@ DOMAIN=$4
 base=""
 filter="(|"
 baseconf="CN=Schema,CN=Configuration,"
-baseconf+=$(ldapsearch -R placeholder -h $2.$DOMAIN -Y GSSAPI -s base -b "" rootDomainNamingContext | grep -i rootDomainNamingContext: | cut -d " " -f 2)
+baseconf+=$(ldapsearch -R $5 -h $2.$DOMAIN -Y GSSAPI -s base -b "" rootDomainNamingContext | grep -i rootDomainNamingContext: | cut -d " " -f 2)
 echo $baseconf
 
 echo "Building attributes list"
-ldapsearch -R placeholder -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${baseconf}" CN | grep cn | cut -d " " -f 2 | grep -iE 'password|pwd|creds|cred|secret' | grep -vEi 'count|set|time|age|length|propertie' | sort | uniq  > $DOMAIN-keywords.txt
+ldapsearch -R $5 -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${baseconf}" CN | grep cn | cut -d " " -f 2 | grep -iE 'password|pwd|creds|cred|secret' | grep -vEi 'count|set|time|age|length|propertie' | sort | uniq  > $DOMAIN-keywords.txt
 sed -i 's/-//g' $DOMAIN-keywords.txt
 
 echo -n "Analyzing domain " 
@@ -41,7 +41,7 @@ done
 filter+=")"
 
 echo -e "${RED}****These are supposed to be interesting results: ****${NC}"
-ldapsearch -R placeholder -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${base::-1}" "${filter}" > $DOMAIN-enum.txt
+ldapsearch -R $5 -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${base::-1}" "${filter}" > $DOMAIN-enum.txt
 echo "" 
 cat $DOMAIN-enum.txt | grep -i -f $DOMAIN-keywords.txt | grep -ivE 'filter|objectclass'
 echo "" 
