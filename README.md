@@ -1,6 +1,6 @@
 # LDAP Password Hunter
 
-It happens than due to legacy services requirements or just bad security practices password are world-readable in the LDAP database by any user who is able to authenticate.  
+It happens that due to legacy services requirements or just bad security practices password are world-readable in the LDAP database by any user who is able to authenticate.  
 LDAP Password Hunter is a tool which wraps features of getTGT.py (Impacket) and ldapsearch in order to look up for password stored in LDAP database. Impacket getTGT.py script is
 used in order to authenticate the domain account used for enumeration and save its TGT kerberos ticket. TGT ticket is then exported in KRB5CCNAME variable which is used by 
 ldapsearch script to authenticate and obtain TGS kerberos tickets for each domain/DC LDAP-Password-Hunter wants to be ran for. Basing on the CN=Schema,CN=Configuration export results
