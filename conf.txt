@@ -1,0 +1,2 @@
+domain-controller-ip DOMAIN-IP
+username DOMAIN-ACCOUNT-USERNAME
