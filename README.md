@@ -10,6 +10,7 @@ a custom list of attributes is built and filtered in order to identify a big que
 
 * [Ldapsearch](https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html) 
 * [Impacket](https://github.com/SecureAuthCorp/impacket)
+* [Sqlite](https://www.sqlite.org/index.html)
 
 ## Usage
 
