@@ -15,6 +15,8 @@ if [ -z $KRB5CCNAME ] ; then
 	mv $3.ccache $3TGT.ccache
 	export KRB5CCNAME="$(pwd)"/$3TGT.ccache
 fi 
+#exporting LDAPSAL_NOCANON variable for forcing not to reverse lookup
+export LDAPSASL_NOCANON=on
 DOMAIN=$4
 base=""
 filter="(|"
