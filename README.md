@@ -36,3 +36,4 @@ Easy-peasy :)
 
 * SecureAuthCorp: For the work on [Impacket](https://github.com/SecureAuthCorp/impacket) project
 * Alberto Solino (@agsolino): For the work on kerberoast modules based on the Impacket framework
+* [Restrospected](https://github.com/Retrospected): For helping out every Friday with debugging the code and brainstorming on new features
