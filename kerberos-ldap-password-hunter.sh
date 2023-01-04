@@ -25,7 +25,6 @@ baseconf+=$(ldapsearch -R $5 -h $2.$DOMAIN -Y GSSAPI -s base -b "" rootDomainNam
 
 echo "Building attributes list"
 ldapsearch -R $5 -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${baseconf}" lDAPDisplayName | grep -i lDAPDisplayName | cut -d " " -f 2 | grep -iE 'password|pwd|creds|cred|secret|userpw' | grep -vEi 'count|set|time|age|length|properties|format|data' | sort | uniq  > $DOMAIN-keywords.txt
-sed -i 's/-//g' $DOMAIN-keywords.txt
 echo -n "Analyzing domain " 
 echo -e "${ORANGE}${DOMAIN^^}${NC}"
 IFS='.' read -r -a array <<< "$DOMAIN"
