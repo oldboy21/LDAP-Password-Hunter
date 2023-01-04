@@ -24,7 +24,7 @@ baseconf="CN=Schema,CN=Configuration,"
 baseconf+=$(ldapsearch -R $5 -h $2.$DOMAIN -Y GSSAPI -s base -b "" rootDomainNamingContext | grep -i rootDomainNamingContext: | cut -d " " -f 2)
 
 echo "Building attributes list"
-ldapsearch -R $5 -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${baseconf}" CN | grep cn | cut -d " " -f 2 | grep -iE 'password|pwd|creds|cred|secret|userpw' | grep -vEi 'count|set|time|age|length|properties|format|data' | sort | uniq  > $DOMAIN-keywords.txt
+ldapsearch -R $5 -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${baseconf}" lDAPDisplayName | grep -i lDAPDisplayName | cut -d " " -f 2 | grep -iE 'password|pwd|creds|cred|secret|userpw' | grep -vEi 'count|set|time|age|length|properties|format|data' | sort | uniq  > $DOMAIN-keywords.txt
 sed -i 's/-//g' $DOMAIN-keywords.txt
 echo -n "Analyzing domain " 
 echo -e "${ORANGE}${DOMAIN^^}${NC}"
@@ -48,16 +48,16 @@ echo ""
 
 while read -r x; do
      read -r y
-    ATTR=$(echo $y | cut -d ":" -f1)
-    VALUE=$(echo $y | cut -d ":" -f3 | sed 's/ //g')
-  if [ "$VALUE" != "" ]; then  
-     CHECK=$(sqlite3 ldapph.db "SELECT FindingId FROM LDAPHUNTERFINDINGS WHERE DistinguishedName = '${x}' AND AttributeName = '${ATTR}' AND Value = '${VALUE}';")
+    DN=$(echo $x | cut -d ":" -f2)
+    #VALUE=$(echo $y | cut -d ":" -f3 | sed 's/ //g')
+  if [ "$y" != "" ]; then  
+     CHECK=$(sqlite3 ldapph.db "SELECT FindingId FROM LDAPHUNTERFINDINGS WHERE DistinguishedName = '${DN}' AND Value = '${y}';")
      if [ "$CHECK" == ""  ]; then
          echo -ne "${RED}NEW ENTRY IN THE DATABASE:${NC}"
-         echo -ne $ATTR
+         echo -ne $y
          echo " - $(date)"
-         echo "${ATTR} - $(date)" >> $DOMAIN-new-entries-$(date "+%F").txt
-         sqlite3 ldapph.db "INSERT INTO LDAPHUNTERFINDINGS (DistinguishedName,AttributeName,Value,Domain) VALUES('${x}','${ATTR}','${VALUE}','${DOMAIN}');" ".exit"
+         echo "${y} - $(date)" >> $DOMAIN-new-entries-$(date "+%F").txt
+         sqlite3 ldapph.db "INSERT INTO LDAPHUNTERFINDINGS (DistinguishedName,Value,Domain) VALUES('${DN}','${y}','${DOMAIN}');" ".exit"
      fi 
      sqlite3 ldapph.db "DELETE FROM LDAPHUNTERFINDINGS WHERE Value IS ''"
   fi
