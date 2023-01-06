@@ -34,14 +34,18 @@ done
 
 for KEYWORD in $(cat $DOMAIN-keywords.txt)
 do
-  filter+="(${KEYWORD}=*)" 
+  if ! grep -Fxq ${KEYWORD//[$'\t\r\n']} attribute-blacklist.txt; then
+    filter+="(${KEYWORD}=*)" 
+  else
+    echo -e "${RED}Found blacklisted keyword:${NC} ${KEYWORD}"
+    sed -e "/^${KEYWORD}$/d" -i $DOMAIN-keywords.txt
+  fi
 done
 filter+=")"
-echo "dn:" >> $DOMAIN-keywords.txt
 echo -e "${RED}****Results are on disk, enumerating next DC! ****${NC}"
 ldapsearch -R $5 -h $2.$DOMAIN -E pr=10000/noprompt -Y GSSAPI -b "${base::-1}" "${filter}" > $DOMAIN-enum.txt
 echo "" 
-cat $DOMAIN-enum.txt | grep -i -f $DOMAIN-keywords.txt | grep -ivE 'filter|objectclass' | uniq  > $DOMAIN-enum-bak.txt
+cat $DOMAIN-enum.txt | grep -i -w -f $DOMAIN-keywords.txt | grep -ivE 'filter|objectclass|ExpirationTime' | uniq  > $DOMAIN-enum-bak.txt
 mv $DOMAIN-enum-bak.txt $DOMAIN-enum.txt
 echo "" 
 
